@@ -8,66 +8,63 @@ E BIT P3.2
 DBUS EQU P2
 START: 
 	SETB P1.2
-	CLR LED
 	JB SENSOR, ON
 OFF:
 	mov R0,#0
-    acall init_lcd
+    	acall init_lcd
 	mov a, #01h
 	acall lcd_command
 	acall delay_2ms
 	mov a, #80h
 	acall lcd_command
-    mov dptr,#led_off
+    	mov dptr,#led_off
 	sjmp loop
 	
 ON:
 	mov R0,#0
-    acall init_lcd
+    	acall init_lcd
 	mov a, #01h
 	acall lcd_command
 	acall delay_2ms
 	mov a, #80h
 	acall lcd_command
-    mov dptr,#led_on
-loop: clr a
-    movc a,@a+dptr
+    	mov dptr,#led_on
+loop: 	
+	clr a
+    	movc a,@a+dptr
 	cjne A,#0,NHAY
 	acall DELAY_1S
 	sjmp START
-NHAY:   acall lcd_write
-	
+NHAY:   
+	acall lcd_write	
 	inc R0
 	inc dptr
 	cjne R0,#16,loop
 	mov A,#0C0H
 	acall lcd_command
-    SJMP loop
+	SJMP loop
 THOAT: SJMP $
 lcd_write:
-    setb rs
-    clr rw
-    mov dbus,a
-    setb e
-    clr e
-    acall wait_lcd
-    ret
+	setb rs
+	clr rw
+	mov dbus,a
+	setb e
+	clr e
+	acall wait_lcd
+	ret
 
 lcd_command:
-   clr rw
-   clr rs
-   mov dbus,a
-   setb e
-   clr e
-   acall wait_lcd
-   ret
+	clr rw
+	clr rs
+	mov dbus,a
+	setb e
+	clr e
+	acall wait_lcd
+	ret
 wait_lcd:
-   
-lap:
-   mov r7,#100
-   djnz r7,$
-   
-   ret
+	mov r7,#100
+	djnz r7,$
+	ret
 init_lcd: 
 	clr rs
 	mov a,#38h
